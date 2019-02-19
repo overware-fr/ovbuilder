@@ -1,0 +1,57 @@
+#!/bin/bash
+# \file build-product
+# \brief Script to compil a program
+# \author Jeremy HERGAULT (reneca)
+# \version 1.0
+# \date 2019-02-17
+#
+# This file is part of OVBuilder, which is builder for overware programs.
+# Copyright (C) 2019  HERGAULT Jeremy, Alexandre, Thierry ( reneca )
+#
+# OVBuilder is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# OVBuilder is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OVCloud. If not, see <http://www.gnu.org/licenses/>.
+##
+
+# Select product directory
+source /usr/local/bin/select-product.sh
+
+if [ -z "$(ls -l | grep -i makefile)" ]; then
+  # No makefile (run bash interpreter)
+  bash
+  exit
+fi
+
+# List of folder which are dynamic librairies
+libfolderlist=`find /opt/ -mindepth 1 -maxdepth 1 -name "ov*" -o -name "OV*" -type d '!' -exec sh -c 'ls -1 "{}"|egrep -i -q "\.so$"' ';' -print`
+
+for libfolder in $libfolderlist; do
+  if ! [ -d $libfolder/sources ]; then
+    ln -snf /sources $libfolder/sources
+  fi
+done
+
+if [ "$DEBUG" == "yes" ]; then
+  time make EMBEDDED=1 -j $PARALLEL debug
+else
+  time make EMBEDDED=1 -j $PARALLEL
+fi
+
+for libfolder in $libfolderlist; do
+  if [ -L $libfolder/sources ]; then
+    rm $libfolder/sources
+  fi
+done
+
+echo
+
+# End of file

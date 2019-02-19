@@ -1,0 +1,51 @@
+#!/bin/bash
+# \file analyse-stacktrace
+# \brief Script to print a stacktrace from program address
+# \author Jeremy HERGAULT (reneca)
+# \version 1.0
+# \date 2019-02-17
+#
+# This file is part of OVBuilder, which is builder for overware programs.
+# Copyright (C) 2019  HERGAULT Jeremy, Alexandre, Thierry ( reneca )
+#
+# OVBuilder is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# OVBuilder is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OVCloud. If not, see <http://www.gnu.org/licenses/>.
+##
+
+# Install librairies and add symbols if needed
+for lib in $(ls /opt/*/*.so); do
+  cp $lib /usr/lib/
+  if [ -f "$lib.sym" ]; then
+    objcopy --add-gnu-debuglink $lib.sym /usr/lib/$(basename $lib)
+  fi
+done
+
+# Select product directory
+source /usr/local/bin/select-product.sh
+
+binaryFile=`ls *.bin | head -1`
+if [ -n "$binaryFile" ]; then
+  cp $binaryFile /tmp/
+  if [ -f $binaryFile.sym ]; then
+    objcopy --add-gnu-debuglink $binaryFile.sym /tmp/$binaryFile
+  fi
+
+  # Read stacktrace
+  echo "eu-addr2line -Cif -e /tmp/$binaryFile $(cat stacktrace | tr '\n' ' ')"
+  eu-addr2line -Cif -e /tmp/$binaryFile $(cat stacktrace | tr '\n' ' ')
+else
+  echo "No given executable"
+fi
+
+
+# End of script

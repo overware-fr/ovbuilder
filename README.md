@@ -1,10 +1,3 @@
-# Supported tags and respective *Dockerfile* links
-
- * [debian, latest (debian/Dockerfile)](https://github.com/reneca/ovbuilder/blob/master/Dockerfile)
-
- * [centos (centos/Dockerfile)](https://github.com/reneca/ovbuilder/blob/centos/Dockerfile)
-
-
 # OVBuilder
 
 This builder is to compile C++ overware programs.

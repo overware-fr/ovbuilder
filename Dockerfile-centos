@@ -1,6 +1,6 @@
 ##
-# \file Dockerfile
-# \brief Dockerfile to create debian overware ovbuilder
+# \file Dockerfile-centos
+# \brief Dockerfile to create centos overware ovbuilder
 # \author Jeremy HERGAULT (reneca)
 # \version 1.0
 # \date 2019-02-17
@@ -22,44 +22,37 @@
 # along with OVCloud. If not, see <http://www.gnu.org/licenses/>.
 ##
 
-FROM debian:stable
+FROM centos:7
 MAINTAINER HERGAULT Jeremy <reneca@overware.fr>
 LABEL Description="OVBuilder for overware programs" Vendor="overware" Version="1.0"
 
 ENV DOCKERCOMPIL=true \
-    PATH="${PATH}:/usr/local/bin:/sources/bin"
+    PATH="${PATH}:/usr/local/bin"
 
 ARG OPENSSL_PACKAGE=openssl-1.1.1a
 ARG ZLIB_PACKAGE=1.2.8
 
-COPY scripts/select-product.sh scripts/analyse-stacktrace scripts/build-doc scripts/build-cppanalysis scripts/build-product scripts/build-rfc /usr/local/bin/
+COPY scripts/select-product.sh scripts/build-product /usr/local/bin/
 
-RUN apt-get -y update && apt-get -y install \
-      ca-certificates \
+RUN yum -y install epel-release centos-release-scl && yum -y install \
       procps \
       wget \
       curl \
       perl \
-      cppcheck \
-      doxygen \
-      graphviz \
-      build-essential \
+      kernel-devel \
       vim \
       git \
       make \
       gcc \
-      g++ \
+      gcc-c++ \
       elfutils \
-      libc-dbg \
-      python-pip \
-      ruby-kramdown-rfc2629 \
- && apt-get -y clean \
- && apt-get -y autoclean \
+      openssl \
+ && yum -y clean all \
  && mkdir -p /sources/objs /opt \
  && curl https://www.openssl.org/source/${OPENSSL_PACKAGE}.tar.gz -o /tmp/openssl.tar.gz \
  && tar zxf /tmp/openssl.tar.gz -C /sources \
  && cd /sources/${OPENSSL_PACKAGE} \
- && ./config --prefix=/sources --openssldir=/etc/ssl shared threads no-ssl3 \
+ && ./config --prefix=/sources shared threads no-ssl3 \
  && make \
  && make install \
  && cd /tmp \
@@ -73,13 +66,8 @@ RUN apt-get -y update && apt-get -y install \
  && cp *.lo /sources/objs/ \
  && cd /sources/objs \
  && for lib in $(ls -d /sources/lib/*.a); do ar -x $lib; done \
- && chmod 755 -R /sources/bin \
- && openssl s_client -showcerts -connect ietf.org:443 </dev/null 2>/dev/null| openssl x509 -outform PEM > /usr/local/share/ca-certificates/ietf.org.crt \
- && openssl s_client -showcerts -connect tools.ietf.org:443 </dev/null 2>/dev/null| openssl x509 -outform PEM > /usr/local/share/ca-certificates/tools.ietf.org.crt \
- && update-ca-certificates \
- && pip install xml2rfc \
- && rm -rf /tmp/* \
- && chmod +x /usr/local/bin/analyse-stacktrace /usr/local/bin/build-doc /usr/local/bin/build-cppanalysis /usr/local/bin/build-product /usr/local/bin/build-rfc
+ && rm -rf /tmp/* /var/cache/yum \
+ && chmod +x /usr/local/bin/build-product
 
 WORKDIR /opt
 

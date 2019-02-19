@@ -41,7 +41,7 @@ run-docker: ## Try to run the debian docker builder
 clean-docker: ## Remove debian docker builder
 	if echo "$(shell docker images $(IMG_NAME):debian)" | grep -q $(IMG_NAME); then docker rmi -f $(IMG_NAME):debian; fi
 
-clean: clean-debian clean-centos ## Remove all builder
+clean: clean-docker ## Remove all builder
 
 
 # End of file

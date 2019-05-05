@@ -29,7 +29,7 @@ LABEL Description="OVBuilder for overware programs" Vendor="overware" Version="1
 ENV DOCKERCOMPIL=true \
     PATH="${PATH}:/usr/local/bin"
 
-ARG OPENSSL_PACKAGE=openssl-1.1.1a
+ARG OPENSSL_PACKAGE=openssl-1.1.1b
 ARG ZLIB_PACKAGE=1.2.8
 
 COPY scripts/select-product.sh scripts/build-product /usr/local/bin/

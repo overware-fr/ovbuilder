@@ -14,13 +14,13 @@ There are also a bunch of tools integrated like :
 
 There are two argument to select which version of openssl and zlib you want:
 
- * OPENSSL_PACKAGE (default: `openssl-1.1.1a`)
+ * OPENSSL_PACKAGE (default: `openssl-1.1.1b`)
 
  * ZLIB_PACKAGE (default: `1.2.8`)
 
 If you want to change them at build add the option :
 ```shell
---build-arg OPENSSL_PACKAGE=openssl-1.1.1a --build-arg ZLIB_PACKAGE=1.2.8
+--build-arg OPENSSL_PACKAGE=openssl-1.1.1b --build-arg ZLIB_PACKAGE=1.2.8
 ```
 
 ## Create builder

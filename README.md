@@ -14,7 +14,7 @@ There are also a bunch of tools integrated like :
 
 There are two argument to select which version of openssl and zlib you want:
 
- * OPENSSL_PACKAGE (default: `openssl-1.1.1c`)
+ * OPENSSL_PACKAGE (default: `openssl-1.1.1d`)
 
  * ZLIB_PACKAGE (default: `1.2.8`)
 

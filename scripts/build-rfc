@@ -28,7 +28,11 @@ source /usr/local/bin/select-product.sh
 if [ -d rfc/ ]; then
   for rfcfile in $(ls rfc/*.md | sed 's/\.md$//g'); do
     kramdown-rfc2629 $rfcfile.md > $rfcfile.xml
-    xml2rfc $rfcfile.xml --text --html
+    if [ -z "$@" ]; then
+      xml2rfc $rfcfile.xml --text --html --pdf
+    else
+      xml2rfc $rfcfile.xml $@
+    fi
   done
 fi
 

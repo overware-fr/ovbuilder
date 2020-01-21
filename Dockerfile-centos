@@ -22,7 +22,7 @@
 # along with OVCloud. If not, see <http://www.gnu.org/licenses/>.
 ##
 
-FROM centos:7
+FROM centos:8
 MAINTAINER HERGAULT Jeremy <reneca@overware.fr>
 LABEL Description="OVBuilder for overware programs" Vendor="overware" Version="1.0"
 
@@ -34,7 +34,7 @@ ARG ZLIB_PACKAGE=1.2.8
 
 COPY scripts/select-product.sh scripts/build-product /usr/local/bin/
 
-RUN yum -y install epel-release centos-release-scl && yum -y install \
+RUN dnf -y install epel-release && dnf -y install \
       procps \
       wget \
       curl \
@@ -47,7 +47,7 @@ RUN yum -y install epel-release centos-release-scl && yum -y install \
       gcc-c++ \
       elfutils \
       openssl \
- && yum -y clean all \
+ && dnf -y clean all \
  && mkdir -p /sources/objs /opt \
  && curl https://www.openssl.org/source/${OPENSSL_PACKAGE}.tar.gz -o /tmp/openssl.tar.gz \
  && tar zxf /tmp/openssl.tar.gz -C /sources \

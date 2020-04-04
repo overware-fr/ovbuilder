@@ -29,10 +29,10 @@ LABEL Description="OVBuilder for overware programs" Vendor="overware" Version="1
 ENV DOCKERCOMPIL=true \
     PATH="${PATH}:/usr/local/bin:/sources/bin"
 
-ARG OPENSSL_PACKAGE=openssl-1.1.1d
+ARG OPENSSL_PACKAGE=openssl-1.1.1e
 ARG ZLIB_PACKAGE=1.2.8
 
-COPY scripts/select-product.sh scripts/analyse-stacktrace scripts/build-doc scripts/build-cppanalysis scripts/build-product scripts/build-rfc /usr/local/bin/
+COPY scripts/select-product.sh scripts/analyse-stacktrace scripts/build-doc scripts/build-cppanalysis scripts/make-product scripts/build-rfc /usr/local/bin/
 
 RUN apt-get -y update && apt-get -y install \
       ca-certificates \
@@ -50,6 +50,8 @@ RUN apt-get -y update && apt-get -y install \
       make \
       gcc \
       g++ \
+      lcov \
+      libssl-dev \
       elfutils \
       libc-dbg \
       python3-pip \
@@ -61,7 +63,7 @@ RUN apt-get -y update && apt-get -y install \
  && curl https://www.openssl.org/source/${OPENSSL_PACKAGE}.tar.gz -o /tmp/openssl.tar.gz \
  && tar zxf /tmp/openssl.tar.gz -C /sources \
  && cd /sources/${OPENSSL_PACKAGE} \
- && ./config --prefix=/sources --openssldir=/etc/ssl shared threads no-ssl3 \
+ && ./config --prefix=/sources --openssldir=/etc/ssl shared threads no-comp no-idea no-dtls no-ssl3 no-weak-ssl-ciphers \
  && make \
  && make install \
  && cd /tmp \
@@ -81,13 +83,13 @@ RUN apt-get -y update && apt-get -y install \
  && update-ca-certificates \
  && pip3 install xml2rfc pycairo weasyprint \
  && rm -rf /tmp/* \
- && chmod +x /usr/local/bin/analyse-stacktrace /usr/local/bin/build-doc /usr/local/bin/build-cppanalysis /usr/local/bin/build-product /usr/local/bin/build-rfc
+ && chmod +x /usr/local/bin/analyse-stacktrace /usr/local/bin/build-doc /usr/local/bin/build-cppanalysis /usr/local/bin/make-product /usr/local/bin/build-rfc
 
 WORKDIR /opt
 
 VOLUME /opt/
 
-ENTRYPOINT ["/usr/local/bin/build-product"]
+ENTRYPOINT ["/usr/local/bin/make-product"]
 
 
 # End of Dockerfile

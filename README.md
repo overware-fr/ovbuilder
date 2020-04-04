@@ -14,13 +14,13 @@ There are also a bunch of tools integrated like :
 
 There are two argument to select which version of openssl and zlib you want:
 
- * OPENSSL_PACKAGE (default: `openssl-1.1.1d`)
+ * OPENSSL_PACKAGE (default: `openssl-1.1.1e`)
 
  * ZLIB_PACKAGE (default: `1.2.8`)
 
 If you want to change them at build add the option :
 ```shell
---build-arg OPENSSL_PACKAGE=openssl-1.1.1d --build-arg ZLIB_PACKAGE=1.2.8
+--build-arg OPENSSL_PACKAGE=openssl-1.1.1e --build-arg ZLIB_PACKAGE=1.2.8
 ```
 
 ## Create builder
@@ -41,7 +41,7 @@ To use the builder, you have to :
 
  * You have the option to indicate the number of thread you want to use `-e PARALLEL=[number_threads]`
 
-After that the default entrypoint is *build-product* to build your product.
+After that the default entrypoint is *make-product* to build your product.
 But you can select entrypoint :
 
  * *analyse-stacktrace* : print a stacktrace from program address

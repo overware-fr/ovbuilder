@@ -27,7 +27,7 @@ source /usr/local/bin/select-product.sh
 
 rm -rf cpp.analysis
 
-cppcheck -j $PARALLEL -DLINUX -DOBFUSCATEMEM --enable=all . 2> /tmp/analysis.txt
+cppcheck -j $PARALLEL -DLINUX -DLINUX_$(grep '^ID=' /etc/os-release | sed 's/^ID=//g' | tr -d '"' 2> /dev/null | tr [:lower:] [:upper:]) -DOBFUSCATEMEM --enable=all . 2> /tmp/analysis.txt
 grep -v "(style) Class '[a-zA-Z<>,]*' has a constructor with [0-9] argument that is not explicit\.$" /tmp/analysis.txt > cpp.analysis
 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# \file build-product
+# \file make-product
 # \brief Script to compil a program
 # \author Jeremy HERGAULT (reneca)
 # \version 1.0
@@ -40,11 +40,7 @@ for libfolder in $libfolderlist; do
   fi
 done
 
-if [ "$DEBUG" == "yes" ]; then
-  time make EMBEDDED=1 -j $PARALLEL debug
-else
-  time make EMBEDDED=1 -j $PARALLEL
-fi
+time make EMBEDDED=1 -j $PARALLEL $@
 
 for libfolder in $libfolderlist; do
   if [ -L $libfolder/sources ]; then

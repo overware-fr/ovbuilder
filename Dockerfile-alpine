@@ -1,12 +1,12 @@
 ##
-# \file Dockerfile-centos
-# \brief Dockerfile to create centos overware ovbuilder
+# \file Dockerfile-alpine
+# \brief Dockerfile to create alpine overware ovbuilder
 # \author Jeremy HERGAULT (reneca)
 # \version 1.0
-# \date 2019-02-17
+# \date 2020-03-26
 #
 # This file is part of OVBuilder, which is builder for overware programs.
-# Copyright (C) 2019  HERGAULT Jeremy, Alexandre, Thierry ( reneca )
+# Copyright (C) 2020  HERGAULT Jeremy, Alexandre, Thierry ( reneca )
 #
 # OVBuilder is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # along with OVCloud. If not, see <http://www.gnu.org/licenses/>.
 ##
 
-FROM centos:8
+FROM alpine
 MAINTAINER HERGAULT Jeremy <reneca@overware.fr>
 LABEL Description="OVBuilder for overware programs" Vendor="overware" Version="1.0"
 
@@ -34,20 +34,25 @@ ARG ZLIB_PACKAGE=1.2.8
 
 COPY scripts/select-product.sh scripts/make-product /usr/local/bin/
 
-RUN dnf -y install epel-release && dnf -y install \
+RUN apk add \
+      bash \
+      linux-headers \
       procps \
       wget \
       curl \
       perl \
-      kernel-devel \
       vim \
       git \
       make \
       gcc \
-      gcc-c++ \
+      g++ \
+      musl-dev \
+      libexecinfo-dev \
       elfutils \
       openssl-dev \
- && dnf -y clean all \
+      zlib-dev \
+ && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+      lcov \
  && mkdir -p /sources/objs /opt \
  && curl https://www.openssl.org/source/${OPENSSL_PACKAGE}.tar.gz -o /tmp/openssl.tar.gz \
  && tar zxf /tmp/openssl.tar.gz -C /sources \
@@ -66,7 +71,7 @@ RUN dnf -y install epel-release && dnf -y install \
  && cp *.lo /sources/objs/ \
  && cd /sources/objs \
  && for lib in $(ls -d /sources/lib/*.a); do ar -x $lib; done \
- && rm -rf /tmp/* /var/cache/yum \
+ && rm -rf /tmp/* \
  && chmod +x /usr/local/bin/make-product
 
 WORKDIR /opt

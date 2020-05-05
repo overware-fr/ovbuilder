@@ -46,10 +46,6 @@ But you can select entrypoint :
 
  * *analyse-stacktrace* : print a stacktrace from program address
 
- * *build-cppanalysis* : do a cppcheck analysis and put the result to cpp.analysis
-
- * *build-doc* : generate the Doxyfile program documentation
-
  * *build-rfc* : generate all rfcs associate to a program
 
 
@@ -60,6 +56,12 @@ Compile a debian product
 docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ overware/ovbuilder:debian
 ```
 
+Execute make target on a debian product
+```shell
+docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ overware/ovbuilder:debian doc
+docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ overware/ovbuilder:debian cppcheck
+```
+
 Compile a centos product
 ```shell
 docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ overware/ovbuilder:centos
@@ -67,5 +69,5 @@ docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomePro
 
 Run a cppcheck analysis
 ```shell
-docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ --entrypoint /usr/local/bin/build-cppanalysis overware/ovbuilder:debian
+docker run -ti --rm -h dev-builder --name dev-builder  -e PRODUCTNAME=AwesomeProduct -v /home/toto/AwesomeProject:/opt/ --entrypoint /usr/local/bin/build-rfc overware/ovbuilder:debian
 ```

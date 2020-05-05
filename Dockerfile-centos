@@ -46,7 +46,7 @@ RUN dnf -y install epel-release && dnf -y install \
       gcc \
       gcc-c++ \
       elfutils \
-      openssl-dev \
+      openssl-devel \
  && dnf -y clean all \
  && mkdir -p /sources/objs /opt \
  && curl https://www.openssl.org/source/${OPENSSL_PACKAGE}.tar.gz -o /tmp/openssl.tar.gz \
@@ -66,6 +66,10 @@ RUN dnf -y install epel-release && dnf -y install \
  && cp *.lo /sources/objs/ \
  && cd /sources/objs \
  && for lib in $(ls -d /sources/lib/*.a); do ar -x $lib; done \
+ && chmod 755 -R /sources/bin \
+ && for header in $(ls /sources/include); do ln -snf /sources/include/$header /usr/include/$header; done \
+ && for lib in $(ls /sources/lib); do ln -snf /sources/lib/$lib /usr/lib/$lib; done \
+ && for bin in $(ls /sources/bin); do ln -snf /sources/bin/$bin /usr/bin/$bin; done \
  && rm -rf /tmp/* /var/cache/yum \
  && chmod +x /usr/local/bin/make-product
 

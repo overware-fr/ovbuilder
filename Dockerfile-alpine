@@ -49,8 +49,7 @@ RUN apk add \
       musl-dev \
       libexecinfo-dev \
       elfutils \
-      openssl-dev \
-      zlib-dev \
+      gtest-dev \
  && apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
       lcov \
  && mkdir -p /sources/objs /opt \
@@ -71,6 +70,10 @@ RUN apk add \
  && cp *.lo /sources/objs/ \
  && cd /sources/objs \
  && for lib in $(ls -d /sources/lib/*.a); do ar -x $lib; done \
+ && chmod 755 -R /sources/bin \
+ && for header in $(ls /sources/include); do ln -snf /sources/include/$header /usr/include/$header; done \
+ && for lib in $(ls /sources/lib); do ln -snf /sources/lib/$lib /usr/lib/$lib; done \
+ && for bin in $(ls /sources/bin); do ln -snf /sources/bin/$bin /usr/bin/$bin; done \
  && rm -rf /tmp/* \
  && chmod +x /usr/local/bin/make-product
 
